@@ -4,6 +4,7 @@
 #include <fstream>
 #include "standaard.h"
 #include "beurs.h"
+
 using namespace std;
 
 //*************************************************************************
@@ -11,36 +12,71 @@ using namespace std;
 // Default constructor
 Beurs::Beurs ()
 {
-  // TODO: implementeer (zo nodig) deze constructor
+// TODO: implementeer (zo nodig) deze constructor
 
 }  // default constructor
 
 //****************************************************************************
 
+
 bool Beurs::leesIn (const char* invoernaam)
 {
-  // TODO: implementeer deze memberfunctie
+	ifstream invoer (invoernaam, ios::in);
 
-  return true;
+	if (!invoer.is_open()) { // Check of de file geopened kan worden
+		cout << "Kan file niet openen." << endl;
+		return false;
+	}
+	invoerNaam = invoernaam; // sla de naam op in de classe
 
+	invoer >> tw;
+	invoer >> n;
+
+	// checkt en tw en n binnen de grenzen ligen
+	if (!(1 <= tw && tw <= MaxTw && 1 <= n && n <= MaxN)) {
+		cout << "Tw en/of n ligt/liggen niet binnen de grenzen." << endl;
+		return false;
+	}
+
+	invoer.get();
+	invoer >> provisie;
+	invoer.get();
+	invoer >> b0;
+
+	// leest de koersen in
+	for(int i = 0; i < tw+1; i++) {
+		dagen[i] = new Dag;
+		invoer.get();
+		for(int j = 0; j < n; j++) {
+			invoer >> dagen[i]->koersen[j];
+		}
+	}
+
+	// leest de rentes in
+	for (int i = 0; i < tw; i++) {
+		invoer.get();
+		invoer >> dagen[i]->rente;
+	}
+
+	return true;
 }  // leesIn
 
 //****************************************************************************
 
 void Beurs::drukAfInvoer ()
 {
-  // TODO: implementeer deze memberfunctie
+// TODO: implementeer deze memberfunctie
 
 }  // drukAfInvoer
 
 //****************************************************************************
 
 double Beurs::bepaalMaxBedragBU
-         (vector <vector <pair <bool,int> > > &transacties)
+		(vector <vector <pair <bool,int> > > &transacties)
 {
-  // TODO: implementeer deze memberfunctie
+// TODO: implementeer deze memberfunctie
 
-  return 0.0;
+return 0.0;
 
 }  // bepaalMaxBedragBU
 
@@ -48,18 +84,18 @@ double Beurs::bepaalMaxBedragBU
 
 double Beurs::bepaalMaxBedragRec (bool memo)
 {
-  // TODO: implementeer deze memberfunctie
+// TODO: implementeer deze memberfunctie
 
-  return 0.0;
+return 0.0;
 
 }  // bepaalMaxBedragRec (memo)
 
 //****************************************************************************
 
 void Beurs::drukAfTransacties
-            (vector <vector <pair <bool,int> > > transacties)
+			(vector <vector <pair <bool,int> > > transacties)
 {
-  // TODO: implementeer deze memberfunctie
+// TODO: implementeer deze memberfunctie
 
 }  // drukAfTransacties
 
