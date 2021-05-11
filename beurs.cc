@@ -65,6 +65,25 @@ bool Beurs::leesIn (const char* invoernaam)
 
 void Beurs::drukAfInvoer ()
 {
+	cout << "--- " << invoerNaam << " ---" << endl;
+	cout << "Bedrag wereldreis: " << tw << endl;
+	cout << "Dagen tot wereldreis: " << tw+1 << endl;
+	cout << "Provisie: " << provisie << endl;
+	cout << "Beginbedrag: " << b0 << endl;
+	cout << "Bedrijven: "  << n << endl;
+	for (int i = 0; i < tw+1; i++) {
+		cout << "  Dag " << i << ": " << endl;
+		cout << "    Koersen: ";
+		for (int j = 0; j < n; j++) {
+			cout << dagen[i]->koersen[j] << ", ";
+		}
+		cout << endl;
+		if (i != tw){
+			cout << "    Rente: " << dagen[i]->rente << endl;
+		}
+	}
+	cout << "--- " << invoerNaam << " ---" << endl;
+
 // TODO: implementeer deze memberfunctie
 
 }  // drukAfInvoer
