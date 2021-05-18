@@ -20,7 +20,7 @@ class Beurs
 { public:
 
 	// Default constructor
-	Beurs ();
+	Beurs();
 
 	// Lees de invoerparameters en -waardes in uit tekstbestand invoernaam.
 	// Het formaat van het bestand is als volgt:
@@ -45,10 +45,16 @@ class Beurs
 	// Post:
 	// * Als de returnwaarde true is, zijn alle ingelezen getallen
 	//   opgeslagen in membervariabelen.
-	bool leesIn (const char* invoernaam);
+	bool leesIn(const char* invoernaam);
 
 	// Druk, ter controle, de complete invoer af op het scherm.
-	void drukAfInvoer ();
+	void drukAfInvoer();
+
+	// returned de waarde wanneer alle aandelen verkocht zouden worden op dag t
+	double bepaalWaarde(int tw, double kas, int aandelen);
+
+	// bepaald het bedrag in de kas na de koop en verkoop van aandelen
+	double bepaalKas(int t, double kas, int aandelen, int nieuweAandelen);
 
 	// Bepaal met behulp van bottom-up dynamisch programmeren het maximale
 	// bedrag dat de belegger aan het eind van dag tw in kas kan hebben
@@ -67,7 +73,14 @@ class Beurs
 	// Retourneer:
 	// * Het maximale bedrag op dag tw.
 	double bepaalMaxBedragBU
-			(vector <vector <pair <bool,int> > > &transacties);
+			(vector <vector <pair <bool,int>>> &transacties);
+
+
+	// de bepaalmaxbedragrec waar de recursivie functie daadwerkelijk in staat
+	double bepaalMaxBedragRecNoMemo(int tijd, double kas, int aandelen);
+
+	// de bepaalmaxbedragrec waar de recursivie functie daadwerkelijk in staat
+	double bepaalMaxBedragRecNoMemo2(int tijd, double kas, int aandelen);
 
 	// Bepaal recursief het maximale bedrag dat de belegger aan het eind
 	// van dag tw in kas kan hebben (op dat moment heeft hij geen aandelen
@@ -80,7 +93,7 @@ class Beurs
 	// * Er is een geldige instantie ingelezen.
 	// Retourneer:
 	// * Het maximale bedrag op dag tw.
-	double bepaalMaxBedragRec (bool memo);
+	double bepaalMaxBedragRec(bool memo);
 
 	// Druk de transacties in parameter transacties (koop en verkoop
 	// van aandelen) dag voor dag af op het scherm.
@@ -93,18 +106,20 @@ class Beurs
 	// * Er is een geldige instantie ingelezen.
 	// * De transacties in parameter transacties zijn geldige transacties
 	//   bij deze instantie.
-	void drukAfTransacties (vector <vector <pair <bool,int> > > transacties);
+	void drukAfTransacties(vector <vector <pair <bool,int> > > transacties);
 
 private:
 	// TODO: uw eigen memberfuncties en -variabelen
 
-	int tw,    // tijdstip_wereldreis
-		n;     // het aantal verschillende aandelen
+	int tw,		// tijdstip_wereldreis
+		n;		// het aantal verschillende aandelen
 	double provisie,  // provisie op transacties, in procenten.
-		b0;  // bedrag op tijdstip 0
+		b0;		// bedrag op tijdstip 0
+
 	string invoerNaam;
 	Dag* dagen[MaxTw+1];
-
+			// kas;	// huidig bedrag
+					// t,		// huidig tijdstip
 };
 
 #endif
