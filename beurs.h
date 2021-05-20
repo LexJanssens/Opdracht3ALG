@@ -47,6 +47,9 @@ class Beurs
 	//   opgeslagen in membervariabelen.
 	bool leesIn(const char* invoernaam);
 
+	int binToDec(string n);
+	string decToBin(int n);
+
 	// Druk, ter controle, de complete invoer af op het scherm.
 	void drukAfInvoer();
 
