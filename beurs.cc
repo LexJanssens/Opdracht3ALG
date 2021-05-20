@@ -89,6 +89,7 @@ void Beurs::drukAfInvoer()
 
 //****************************************************************************
 
+// zet een binaire string om naar een decimaal getal
 int Beurs::binToDec(string bin) {
 	int s = 0;
 	int l = bin.size(); // lengte van de bitstring
@@ -102,7 +103,7 @@ int Beurs::binToDec(string bin) {
 
 //****************************************************************************
 
-// check nog voor maximale grootte.
+// zet een decimaal getal om naar een binaire string
 string Beurs::decToBin(int dec) {
 	string s;
 	for (int i = n; i >= 0; i--) {
@@ -116,6 +117,8 @@ string Beurs::decToBin(int dec) {
 	}
 	return s;
 }
+
+//****************************************************************************
 
 // returned de waarde van de aandelen op dag t
 double Beurs::bepaalWaardeAandelen(int t, int aandelen)
@@ -134,29 +137,33 @@ double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 
 //****************************************************************************
 
-double Beurs::bepaalKas(int t, double kas, int aandelen, int nieuweAandelen)
+// bepaald de nieuwe kas door de aandelen te kopen en te verkopens
+double Beurs::bepaalKas(int t, double kas, int vorigeAandelen, int aandelen)
 {
-	bool huidigA, nieuwA;
-	string bin = decToBin(aandelen);
-	string binNieuw = decToBin(nieuweAandelen);
+	bool vorigA, huidigA;
+	string bin = decToBin(vorigeAandelen);
+	string binNieuw = decToBin(aandelen);
+
 	for (int i = 0; i < n; i++) { // voor ieder aandeel
 
 		// kijkt of de huidige situatie aandeel i heeft
-		huidigA = false;
 		if (bin[i] == '1') {
-			huidigA = true;
+			vorigA = true;
+		} else {
+			vorigA = false;
 		}
 
 		// kijkt of de toekomstige situatie aandeel i heeft
-		nieuwA = false;
 		if (binNieuw[i] == '1') {
-			nieuwA = true;
+			huidigA = true;
+		} else {
+			huidigA = false;
 		}
 
 		// wanneer er een aandeel verkocht of gekocht word
 		// worden de uitgaven/inkomsten - de provisie bij de nieuweKas gevoegd
-		if (!(huidigA == nieuwA)) {
-			if (huidigA) {
+		if (!(vorigA == huidigA)) {
+			if (vorigA) {
 				kas += dagen[t]->koersen[i]*(1-(provisie/100));
 			} else {
 				kas -= dagen[t]->koersen[i]*(1+(provisie/100));
@@ -170,13 +177,14 @@ double Beurs::bepaalKas(int t, double kas, int aandelen, int nieuweAandelen)
 double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
-	int maxAandeel = pow(2,n)-1;
+	int maxAandeel = pow(2,n);
 
 	double bedrag[tw+1][maxAandeel];
-	double kas, maxKas;
+	double kas;
+	double maxKas = -1;
 
 	for (int i = 0; i < maxAandeel; i++) {
-		bedrag[0][i] = b0-bepaalWaardeAandelen(0, i);
+		bedrag[0][i] = b0-bepaalWaardeAandelen(0, i)*(1+(provisie/100));
 	}
 
 	for (int i = 1; i <= tw; i++) {
@@ -184,20 +192,20 @@ double Beurs::bepaalMaxBedragBU
 			for (int k = 0; k < maxAandeel; k++) {
 				kas = bedrag[i-1][k];
 				if (kas >= 0) {
-					kas *= 1+(dagen[i]->rente/100);
-					kas = bepaalKas(i, kas, j, k);
+					kas *= 1+(dagen[i-1]->rente/100);
+					kas = bepaalKas(i, kas, k, j);
 				}
 				if (kas > maxKas) {
 					maxKas = kas;
 				}
 			}
 			bedrag[i][j] = maxKas;
-			maxKas = 0;
+			maxKas = -1;
 		}
 	}
 	for (int i = 0; i <= tw; i++) {
 		for (int j = 0; j < maxAandeel; j++) {
-			cout << static_cast<int>(bedrag[i][j]) << " ";
+			cout << bedrag[i][j] << " ";
 		}
 		cout << endl << endl;
 	}
@@ -235,37 +243,6 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 
 	return maxBedrag;
 }  // bepaalMaxBedragRec (memo)
-
-double Beurs::bepaalMaxBedragRecNoMemo2(int t, double kas, int aandelen)
-{
-	double maxBedrag = 0;
-	double bedrag;
-	double nieuweKas;
-
-	if (t == tw) {
-		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-	} else {
-		for (int i = 0; i < (int)pow(2, n); i++) {
-			double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-			double nieuw = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-			cout << "oud: " << oud << endl;
-			cout << "nieuw: " << nieuw << endl;
-
-			if (nieuweKas >= 0 &&  nieuw >= oud) {
-
-				nieuweKas *= 1.0+(dagen[t]->rente/100); // krijgen van rente
-				bedrag = bepaalMaxBedragRecNoMemo(t+1, nieuweKas, i);
-
-				if (bedrag > maxBedrag) {
-					cout << bedrag << endl;
-					maxBedrag = bedrag;
-				}
-			}
-		}
-	}
-	return maxBedrag;
-}  // bepaalMaxBedragRec (memo)
-
 //****************************************************************************
 
 double Beurs::bepaalMaxBedragRec(bool memo)
