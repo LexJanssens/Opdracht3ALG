@@ -91,24 +91,27 @@ void Beurs::drukAfInvoer()
 
 int Beurs::binToDec(string bin) {
 	int s = 0;
-	int l = bin.size() //lengte van de bitstring
-	for (int i = l; i >= 0; i--) {
+	int l = bin.size(); // lengte van de bitstring
+	for (int i = 0; i < l; i++) {
 		if (bin[i] == '1') {
 			s += (int)pow(2,l-i-1);
 		}
 	}
 	return s;
 }
+
+//****************************************************************************
+
 // check nog voor maximale grootte.
 string Beurs::decToBin(int dec) {
 	string s;
 	for (int i = n; i >= 0; i--) {
 		if (dec - (int)pow(2,i) >= 0) {
 			dec -= (int)pow(2,i);
-			s.push_back('1');
+			s.insert(0, "1");
 		}
 		else {
-			s.push_back('0');
+			s.insert(0, "0");
 		}
 	}
 	return s;
@@ -120,8 +123,8 @@ double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 	double waarde = 0;
 	string s = decToBin(aandelen);
 
-	for (int i = 1; i <= n; i++) { // voor ieder aandeel
-		if (s[n-i] == '1') { // als aandeel in bezit
+	for (int i = 0; i < n; i++) { // voor ieder aandeel
+		if (s[i] == '1') { // als aandeel in bezit
 			// voeg waarde aandeel toe
 			waarde += dagen[t]->koersen[i];
 		}
@@ -136,17 +139,17 @@ double Beurs::bepaalKas(int t, double kas, int aandelen, int nieuweAandelen)
 	bool huidigA, nieuwA;
 	string bin = decToBin(aandelen);
 	string binNieuw = decToBin(nieuweAandelen);
-	for (int i = 1; i <= n; i++) { // voor ieder aandeel
+	for (int i = 0; i < n; i++) { // voor ieder aandeel
 
 		// kijkt of de huidige situatie aandeel i heeft
 		huidigA = false;
-		if (bin[n-i] == '1') {
+		if (bin[i] == '1') {
 			huidigA = true;
 		}
 
 		// kijkt of de toekomstige situatie aandeel i heeft
 		nieuwA = false;
-		if (binNieuw[n-1] == '1') {
+		if (binNieuw[i] == '1') {
 			nieuwA = true;
 		}
 
