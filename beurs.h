@@ -47,11 +47,14 @@ class Beurs
 	//   opgeslagen in membervariabelen.
 	bool leesIn(const char* invoernaam);
 
-	int binToDec(string n);
-	string decToBin(int n);
-
 	// Druk, ter controle, de complete invoer af op het scherm.
 	void drukAfInvoer();
+
+	// zet een binaire string om naar een decimaal getal
+	int binToDec(string n);
+
+	// zet een decimaal getal om naar een binaire string
+	string decToBin(int n);
 
 	// returned de waarde wanneer alle aandelen verkocht zouden worden op dag t
 	double bepaalWaardeAandelen(int tw, int aandelen);
@@ -126,4 +129,3 @@ private:
 };
 
 #endif
-
