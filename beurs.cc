@@ -88,20 +88,21 @@ void Beurs::drukAfInvoer()
 
 //****************************************************************************
 
-// returned de waarde wanneer alle aandelen verkocht zouden worden op dag t
-double Beurs::bepaalWaarde(int t, double kas, int aandelen)
+// returned de waarde van de aandelen op dag t
+double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 {
 	int power;
+	double waarde = 0;
 
 	for (int i = n-1; i >= 0; i--) { // voor ieder aandeel
 		power = (int)pow(2, i);
 		if (aandelen / power >= 1) { // als aandeel in bezit
 			aandelen -= power;
-			// voeg waarde aandeel toe aan de kas
-			kas += dagen[t]->koersen[i]*(1.0-(provisie/100));
+			// voeg waarde aandeel toe
+			waarde += dagen[t]->koersen[i];
 		}
 	}
-	return kas;
+	return waarde;
 }
 
 //****************************************************************************
@@ -145,9 +146,38 @@ double Beurs::bepaalKas(int t, double kas, int aandelen, int nieuweAandelen)
 double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
-	// TODO: implementeer deze memberfunctie
+	int maxAandeel = pow(2,n)-1;
+	double bedrag[tw+1][maxAandeel];
+	double kas, maxKas;
 
-	return 0.0;
+
+	for (int i = 0; i < maxAandeel; i++) {
+		bedrag[0][i] = b0-bepaalWaardeAandelen(0, i);
+	}
+
+	for (int i = 1; i <= tw; i++) {
+		for (int j = 0; j < maxAandeel; j++) {
+			for (int k = 0; k < maxAandeel; k++) {
+				kas = bedrag[i-1][k];
+				if (kas >= 0) {
+					kas *= 1+(dagen[i]->rente/100);
+					kas = bepaalKas(i, kas, j, k);
+				}
+				if (kas > maxKas) {
+					maxKas = kas;
+				}
+			}
+			bedrag[i][j] = maxKas;
+			maxKas = 0;
+		}
+	}
+	for (int i = 0; i <= tw; i++) {
+		for (int j = 0; j < maxAandeel; j++) {
+			cout << static_cast<int>(bedrag[i][j]) << " ";
+		}
+		cout << endl << endl;
+	}
+	return bedrag[tw][0];
 }  // bepaalMaxBedragBU
 
 //****************************************************************************
@@ -159,11 +189,11 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 	double nieuweKas;
 
 	if (t == tw) {
-		return bepaalWaarde(t, kas, aandelen);
+		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 	}
 	for (int i = 0; i < (int)pow(2, n); i++) {
-		double oud = bepaalWaarde(t, kas, aandelen);
-		double nieuw = bepaalWaarde(t, nieuweKas, i);
+		double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
+		double nieuw = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 		cout << "oud: " << oud << endl;
 		cout << "nieuw: " << nieuw << endl;
 
@@ -189,12 +219,11 @@ double Beurs::bepaalMaxBedragRecNoMemo2(int t, double kas, int aandelen)
 	double nieuweKas;
 
 	if (t == tw) {
-		return bepaalWaarde(t, kas, aandelen);
+		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 	} else {
-		return
 		for (int i = 0; i < (int)pow(2, n); i++) {
-			double oud = bepaalWaarde(t, kas, aandelen);
-			double nieuw = bepaalWaarde(t, nieuweKas, i);
+			double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
+			double nieuw = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 			cout << "oud: " << oud << endl;
 			cout << "nieuw: " << nieuw << endl;
 
