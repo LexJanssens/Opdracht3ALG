@@ -84,26 +84,27 @@ void Beurs::drukAfInvoer()
 		}
 	}
 	cout << "--- " << invoerNaam << " ---" << endl;
+
 }  // drukAfInvoer
 
 //****************************************************************************
 
-int Beurs::binToDec(string n) {
+int Beurs::binToDec(string bin) {
 	int s = 0;
-	int p = n.size();
-	for (int i = p; i >= 0; i--) {
-		if (n[i] == '1') {
-			s += (int)pow(2,p-i-1);
+	int l = bin.size() //lengte van de bitstring
+	for (int i = l; i >= 0; i--) {
+		if (bin[i] == '1') {
+			s += (int)pow(2,l-i-1);
 		}
 	}
 	return s;
 }
-
-string Beurs::decToBin(int n) {
+// check nog voor maximale grootte.
+string Beurs::decToBin(int dec) {
 	string s;
-	for (int i = 7; i >= 0; i--) {
-		if (n - (int)pow(2,i) >= 0) {
-			n -= (int)pow(2,i);
+	for (int i = n; i >= 0; i--) {
+		if (dec - (int)pow(2,i) >= 0) {
+			dec -= (int)pow(2,i);
 			s.push_back('1');
 		}
 		else {
