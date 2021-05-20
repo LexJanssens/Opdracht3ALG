@@ -51,7 +51,7 @@ class Beurs
 	void drukAfInvoer();
 
 	// returned de waarde wanneer alle aandelen verkocht zouden worden op dag t
-	double bepaalWaarde(int tw, double kas, int aandelen);
+	double bepaalWaardeAandelen(int tw, int aandelen);
 
 	// bepaald het bedrag in de kas na de koop en verkoop van aandelen
 	double bepaalKas(int t, double kas, int aandelen, int nieuweAandelen);
