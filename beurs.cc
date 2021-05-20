@@ -88,14 +88,39 @@ void Beurs::drukAfInvoer()
 
 //****************************************************************************
 
+int Beurs::binToDec(string n) {
+	int s = 0;
+	int p = n.size();
+	for (int i = p; i >= 0; i--) {
+		if (n[i] == '1') {
+			s += (int)pow(2,p-i-1);
+		}
+	}
+	return s;
+}
+
+string Beurs::decToBin(int n) {
+	string s = "";
+	for (int i = 7; i >= 0; i--) {
+		if (n - (int)pow(2,i) >= 0) {
+			n -= (int)pow(2,i);
+			s.push_back('1');
+		}
+		else {
+			s.push_back('0');
+		}
+	}
+	return s;
+}
+
 // returned de waarde van de aandelen op dag t
 double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 {
 	int power;
 	double waarde = 0;
-
 	for (int i = n-1; i >= 0; i--) { // voor ieder aandeel
 		power = (int)pow(2, i);
+		cout << aandelen << ", " << power << endl;
 		if (aandelen / power >= 1) { // als aandeel in bezit
 			aandelen -= power;
 			// voeg waarde aandeel toe
@@ -130,7 +155,7 @@ double Beurs::bepaalKas(int t, double kas, int aandelen, int nieuweAandelen)
 		}
 
 		// wanneer er een aandeel verkocht of gekocht word
-		// worden de uitgaven/inkomsten - de provisie bij de nieuweKas gevoegd 
+		// worden de uitgaven/inkomsten - de provisie bij de nieuweKas gevoegd
 		if (!(huidigA == nieuwA)) {
 			if (huidigA) {
 				kas += dagen[t]->koersen[i]*(1-(provisie/100));
@@ -147,9 +172,9 @@ double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
 	int maxAandeel = pow(2,n)-1;
+
 	double bedrag[tw+1][maxAandeel];
 	double kas, maxKas;
-
 
 	for (int i = 0; i < maxAandeel; i++) {
 		bedrag[0][i] = b0-bepaalWaardeAandelen(0, i);
