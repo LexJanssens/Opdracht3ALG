@@ -174,42 +174,80 @@ double Beurs::bepaalKas(int t, double kas, int vorigeAandelen, int aandelen)
 }
 //****************************************************************************
 
+// bepaald welke aandelen verkocht of gekocht moeten worden
+vector <pair <bool,int>> Beurs::bepaalTransactie(int vorigeAandelen, int aandelen)
+{
+	vector <pair <bool,int>> transactie;
+	bool vorigA, huidigA;
+	string bin = decToBin(vorigeAandelen);
+	string binNieuw = decToBin(aandelen);
+
+	for (int i = 0; i < n; i++) { // voor ieder aandeel
+
+		// kijkt of de huidige situatie aandeel i heeft
+		if (bin[i] == '1') {
+			vorigA = true;
+		} else {
+			vorigA = false;
+		}
+
+		// kijkt of de toekomstige situatie aandeel i heeft
+		if (binNieuw[i] == '1') {
+			huidigA = true;
+		} else {
+			huidigA = false;
+		}
+		if (!(vorigA == huidigA)) {
+			if (vorigA) {
+				transactie.push_back(make_pair(false, i));
+			} else {
+				transactie.push_back(make_pair(true, i));
+			}
+		}
+	}
+	return transactie;
+}
+
+//****************************************************************************
+
+
 double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
 	int maxAandeel = pow(2,n);
 
-	double bedrag[tw+1][maxAandeel];
+	string bin;
 	double kas;
+	int prevAandeel;
 	double maxKas = -1;
+	pair <double, vector <vector <pair <bool,int>>>> bedrag[tw+1][maxAandeel];
 
-	for (int i = 0; i < maxAandeel; i++) {
-		bedrag[0][i] = b0-bepaalWaardeAandelen(0, i)*(1+(provisie/100));
+	for (int i = 0; i < maxAandeel; i++) { 
+		bedrag[0][i].first = b0-bepaalWaardeAandelen(0, i)*(1+(provisie/100));
+		bedrag[0][i].second.push_back(bepaalTransactie(0,i));
 	}
 
 	for (int i = 1; i <= tw; i++) {
 		for (int j = 0; j < maxAandeel; j++) {
 			for (int k = 0; k < maxAandeel; k++) {
-				kas = bedrag[i-1][k];
+				kas = bedrag[i-1][k].first;
 				if (kas >= 0) {
 					kas *= 1+(dagen[i-1]->rente/100);
 					kas = bepaalKas(i, kas, k, j);
 				}
 				if (kas > maxKas) {
 					maxKas = kas;
+					prevAandeel = k;
 				}
 			}
-			bedrag[i][j] = maxKas;
+			bedrag[i][j].first = maxKas;
 			maxKas = -1;
+			bedrag[i][j].second = bedrag[i-1][prevAandeel].second;
+			bedrag[i][j].second.push_back(bepaalTransactie(prevAandeel,j));
 		}
 	}
-	for (int i = 0; i <= tw; i++) {
-		for (int j = 0; j < maxAandeel; j++) {
-			cout << bedrag[i][j] << " ";
-		}
-		cout << endl << endl;
-	}
-	return bedrag[tw][0];
+	transacties = bedrag[tw][0].second;
+	return bedrag[tw][0].first;
 }  // bepaalMaxBedragBU
 
 //****************************************************************************
@@ -225,22 +263,17 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 	}
 	for (int i = 0; i < (int)pow(2, n); i++) {
 		double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-		double nieuw = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-		cout << "oud: " << oud << endl;
-		cout << "nieuw: " << nieuw << endl;
+		double nieuw = nieuweKas + bepaalWaardeAandelen(t+1, i)*(1.0-(provisie/100));
 
 		if (nieuweKas >= 0 &&  nieuw >= oud) {
-
 			nieuweKas *= 1.0+(dagen[t]->rente/100); // krijgen van rente
 			bedrag = bepaalMaxBedragRecNoMemo(t+1, nieuweKas, i);
 
 			if (bedrag > maxBedrag) {
-				cout << bedrag << endl;
 				maxBedrag = bedrag;
 			}
 		}
 	}
-
 	return maxBedrag;
 }  // bepaalMaxBedragRec (memo)
 //****************************************************************************
@@ -253,9 +286,28 @@ double Beurs::bepaalMaxBedragRec(bool memo)
 //****************************************************************************
 
 void Beurs::drukAfTransacties
-			(vector <vector <pair <bool,int> > > transacties)
+			(vector <vector <pair <bool,int>>> transacties)
 {
-// TODO: implementeer deze memberfunctie
+	int grote;
+	for (int i = 0; i <= tw; i++) {
+		cout << endl << "Dag: " << i;
 
+		grote = transacties[i].size();
+
+		cout << endl << "Verkoop aandelen: ";
+		for (int j = 0; j < grote; j++) {
+			if (!transacties[i][j].first) {
+				cout << transacties[i][j].second << ", ";
+			} 
+		}
+		
+		cout << endl << "Koop aandelen: ";
+		for (int j = 0; j < grote; j++) {
+			if (transacties[i][j].first) {
+				cout << transacties[i][j].second << ", ";
+			} 
+		}
+		cout << endl;
+	}
 }  // drukAfTransacties
 
