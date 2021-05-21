@@ -26,5 +26,8 @@ double randomDouble (double min, double max);
 // (al dan niet met endln erachter).
 void schrijfDouble (double getal, int precisie, bool metEndln);
 
+// returned het grontal tot de macht van de exponent
+int macht(int grondtal, int exponent);
+
 #endif
 
