@@ -4,7 +4,6 @@
 #include <fstream>
 #include "standaard.h"
 #include "beurs.h"
-#include <cmath>
 
 using namespace std;
 
@@ -95,7 +94,7 @@ int Beurs::binToDec(string bin) {
 	int l = bin.size(); // lengte van de bitstring
 	for (int i = 0; i < l; i++) {
 		if (bin[i] == '1') {
-			s += (int)pow(2,l-i-1);
+			s += macht(2,l-i-1);
 		}
 	}
 	return s;
@@ -107,8 +106,8 @@ int Beurs::binToDec(string bin) {
 string Beurs::decToBin(int dec) {
 	string s;
 	for (int i = n; i >= 0; i--) {
-		if (dec - (int)pow(2,i) >= 0) {
-			dec -= (int)pow(2,i);
+		if (dec - macht(2,i) >= 0) {
+			dec -= macht(2,i);
 			s.insert(0, "1");
 		}
 		else {
@@ -214,7 +213,7 @@ vector <pair <bool,int>> Beurs::bepaalTransactie(int vorigeAandelen, int aandele
 double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
-	int maxAandeel = pow(2,n);
+	int maxAandeel = macht(2,n);
 
 	string bin;
 	double kas;
@@ -261,7 +260,7 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 	if (t == tw) {
 		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 	}
-	for (int i = 0; i < (int)pow(2, n); i++) {
+	for (int i = 0; i < macht(2, n); i++) {
 		double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 		double nieuw = nieuweKas + bepaalWaardeAandelen(t+1, i)*(1.0-(provisie/100));
 
@@ -276,6 +275,7 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 	}
 	return maxBedrag;
 }  // bepaalMaxBedragRec (memo)
+
 //****************************************************************************
 
 double Beurs::bepaalMaxBedragRec(bool memo)
@@ -300,7 +300,7 @@ void Beurs::drukAfTransacties
 				cout << transacties[i][j].second << ", ";
 			} 
 		}
-		
+
 		cout << endl << "Koop aandelen: ";
 		for (int j = 0; j < grote; j++) {
 			if (transacties[i][j].first) {
