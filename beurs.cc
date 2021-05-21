@@ -209,7 +209,7 @@ vector <pair <bool,int>> Beurs::bepaalTransactie(int vorigeAandelen, int aandele
 
 //****************************************************************************
 
-
+// 
 double Beurs::bepaalMaxBedragBU
 		(vector <vector <pair <bool,int>>> &transacties)
 {
@@ -219,6 +219,8 @@ double Beurs::bepaalMaxBedragBU
 	double kas;
 	int prevAandeel;
 	double maxKas = -1;
+	
+	// een 2d array met pairs waarvan de eerste de maximale
 	pair <double, vector <vector <pair <bool,int>>>> bedrag[tw+1][maxAandeel];
 
 	for (int i = 0; i < maxAandeel; i++) { 
@@ -260,11 +262,10 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 	if (t == tw) {
 		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 	}
-	for (int i = 0; i < macht(2, n); i++) {
-		double oud = kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-		double nieuw = nieuweKas + bepaalWaardeAandelen(t+1, i)*(1.0-(provisie/100));
+	for (int i = 0; i < macht(2, n); i++) { // voor alle mogenlijke aandelen in bezig
+		nieuweKas = bepaalKas(t, kas, aandelen, n);
 
-		if (nieuweKas >= 0 &&  nieuw >= oud) {
+		if (nieuweKas >= 0) {
 			nieuweKas *= 1.0+(dagen[t]->rente/100); // krijgen van rente
 			bedrag = bepaalMaxBedragRecNoMemo(t+1, nieuweKas, i);
 
