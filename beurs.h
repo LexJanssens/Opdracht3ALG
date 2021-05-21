@@ -62,6 +62,8 @@ class Beurs
 	// bepaald het bedrag in de kas na de koop en verkoop van aandelen
 	double bepaalKas(int t, double kas, int aandelen, int nieuweAandelen);
 
+	vector <pair <bool,int>> bepaalTransactie(int vorigeAandelen, int aandelen);
+
 	// Bepaal met behulp van bottom-up dynamisch programmeren het maximale
 	// bedrag dat de belegger aan het eind van dag tw in kas kan hebben
 	// (op dat moment heeft hij geen aandelen meer).
@@ -84,9 +86,6 @@ class Beurs
 
 	// de bepaalmaxbedragrec waar de recursivie functie daadwerkelijk in staat
 	double bepaalMaxBedragRecNoMemo(int tijd, double kas, int aandelen);
-
-	// de bepaalmaxbedragrec waar de recursivie functie daadwerkelijk in staat
-	double bepaalMaxBedragRecNoMemo2(int tijd, double kas, int aandelen);
 
 	// Bepaal recursief het maximale bedrag dat de belegger aan het eind
 	// van dag tw in kas kan hebben (op dat moment heeft hij geen aandelen
@@ -129,3 +128,4 @@ private:
 };
 
 #endif
+
