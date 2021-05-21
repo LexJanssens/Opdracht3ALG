@@ -123,10 +123,10 @@ string Beurs::decToBin(int dec) {
 double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 {
 	double waarde = 0;
-	string s = decToBin(aandelen);
+	string bin = decToBin(aandelen);
 
 	for (int i = 0; i < n; i++) { // voor ieder aandeel
-		if (s[i] == '1') { // als aandeel in bezit
+		if (bin[i] == '1') { // als aandeel in bezit
 			// voeg waarde aandeel toe
 			waarde += dagen[t]->koersen[i];
 		}
@@ -255,15 +255,16 @@ double Beurs::bepaalMaxBedragBU
 
 double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 {
-	double maxBedrag = 0;
+	double maxBedrag = -1;
 	double bedrag;
 	double nieuweKas;
 
 	if (t == tw) {
 		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
 	}
+
 	for (int i = 0; i < macht(2, n); i++) { // voor alle mogenlijke aandelen in bezig
-		nieuweKas = bepaalKas(t, kas, aandelen, n);
+		nieuweKas = bepaalKas(t, kas, aandelen, i);
 
 		if (nieuweKas >= 0) {
 			nieuweKas *= 1.0+(dagen[t]->rente/100); // krijgen van rente
