@@ -17,8 +17,8 @@ class Dag
 };
 
 class Beurs
-{ public:
-
+{
+	public:
 	// Default constructor
 	Beurs();
 
@@ -50,20 +50,6 @@ class Beurs
 	// Druk, ter controle, de complete invoer af op het scherm.
 	void drukAfInvoer();
 
-	// zet een binaire string om naar een decimaal getal
-	int binToDec(string n);
-
-	// zet een decimaal getal om naar een binaire string
-	string decToBin(int n);
-
-	// returned de waarde wanneer alle aandelen verkocht zouden worden op dag t
-	double bepaalWaardeAandelen(int tw, int aandelen);
-
-	// bepaald het bedrag in de kas na de koop en verkoop van aandelen
-	double bepaalKas(int t, double kas, int aandelen, int nieuweAandelen);
-
-	vector <pair <bool,int>> bepaalTransactie(int vorigeAandelen, int aandelen);
-
 	// Bepaal met behulp van bottom-up dynamisch programmeren het maximale
 	// bedrag dat de belegger aan het eind van dag tw in kas kan hebben
 	// (op dat moment heeft hij geen aandelen meer).
@@ -80,12 +66,8 @@ class Beurs
 	//   aandeel i verkocht moet worden.
 	// Retourneer:
 	// * Het maximale bedrag op dag tw.
-	double bepaalMaxBedragBU
-			(vector <vector <pair <bool,int>>> &transacties);
+	double bepaalMaxBedragBU(vector <vector <pair <bool,int>>> &transacties);
 
-
-	// de bepaalmaxbedragrec waar de recursivie functie daadwerkelijk in staat
-	double bepaalMaxBedragRecNoMemo(int tijd, double kas, int aandelen);
 
 	// Bepaal recursief het maximale bedrag dat de belegger aan het eind
 	// van dag tw in kas kan hebben (op dat moment heeft hij geen aandelen
@@ -121,10 +103,34 @@ private:
 	double provisie,  // provisie op transacties, in procenten.
 		b0;		// bedrag op tijdstip 0
 
-	string invoerNaam;
-	Dag* dagen[MaxTw+1];
-			// kas;	// huidig bedrag
-					// t,		// huidig tijdstip
+	string invoerNaam; // naaminvoerbestand
+	Dag* dagen[MaxTw+1]; // lijst met pointers naar iedere Dag
+
+	// Zet een binaire string om naar een decimaal getal en returned dit getal
+	int binToDec(string n);
+
+	// Zet een decimaal getal om naar een binaire string en returned deze string
+	string decToBin(int n);
+
+	// returned de waarde van de aandelen op dag t
+	double bepaalWaardeAandelen(int tw, int aandelen);
+
+	// bepaald de nieuwe kas door de juiste aandelen te kopen en te verkopen
+	double bepaalKas(int t, double kas, int vorigeAandelen, int aandelen);
+
+	// Bepaald welke aandelen verkocht of gekocht moeten worden
+	// Returned een vector van pairs, de boolean is true als aandeel i gekocht
+	// moet worden, en false als aandeel i verkocht moet worden.
+	vector <pair <bool,int>> bepaalTransactie(int vorigeAandelen, int aandelen);
+
+	// Bepaald recursief/top-down het maximale bedrag in de kas op tijd=t 
+	// met aandelen=a. Deze worden opgeslagen in bedrag[][MaxAs] en gereturned
+	double bepaalMaxBedragRecMemo(int t, int a, double bedrag[][MaxAs]);
+
+	// Recursieve aanroep die het maximale bedrag in de kas op tw returned
+	// beginnend op tijd=t met kas=kas en aandelen=aandelen 
+	// Er worden geen deelresultaten opgeslagen
+	double bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen);
 };
 
 #endif
