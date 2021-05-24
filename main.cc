@@ -39,7 +39,7 @@ void infoblokje() {
 		<< "student Informatica (Artificial Intelligence) te Leiden" << endl
 		<< "en Lex Janssens (s2989344)," << endl
 		<< "student Informatica (Artificial Intelligence) te Leiden" << endl
-		<< "Inleverdatum: 28 -5-2021 23:59" << endl;
+		<< "Inleverdatum: 28-5-2021 23:59" << endl;
 } // info
 
 //*************************************************************************
