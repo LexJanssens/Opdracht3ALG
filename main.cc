@@ -20,14 +20,27 @@
 //   Bij bottom-up dynamisch programmeren worden ook de voor het maximale
 //   bedrag benodigde transacties bepaald.
 //
-// Naam student 1, naam student 2
+// Naam Bart Aaldering s2969866, Lex Jansens s2989344
 
 #include <iostream>
 #include <ctime>  // voor clock() en clock_t
 #include "standaard.h"
 #include "beurs.h"
 using namespace std;
+
 const int MaxBestandsNaamLengte = 30; // maximale lengte van een bestandsnaam
+
+//*************************************************************************
+
+// Algemene info programmeurs
+void infoblokje() {
+	cout << "Rooster" << endl
+		<< "Geschreven door Bart Aaldering (s2969866)," << endl
+		<< "student Informatica (Artificial Intelligence) te Leiden" << endl
+		<< "en Lex Janssens (s2989344)," << endl
+		<< "student Informatica (Artificial Intelligence) te Leiden" << endl
+		<< "Inleverdatum: 28 -5-2021 23:59" << endl;
+} // info
 
 //*************************************************************************
 
@@ -139,8 +152,8 @@ void hoofdmenu ()
   
 int main ()
 {
+  infoblokje()
   hoofdmenu ();
-
   return 0;
 
 }
