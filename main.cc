@@ -152,7 +152,7 @@ void hoofdmenu ()
   
 int main ()
 {
-  infoblokje()
+  infoblokje();
   hoofdmenu ();
   return 0;
 
