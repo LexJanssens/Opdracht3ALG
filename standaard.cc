@@ -65,4 +65,4 @@ int macht(int grondtal, int exponent)
 		macht *= grondtal;
 	}
 	return macht;
-}
+} // macht
