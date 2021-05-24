@@ -34,7 +34,7 @@ const int MaxBestandsNaamLengte = 30; // maximale lengte van een bestandsnaam
 
 // Algemene info programmeurs
 void infoblokje() {
-	cout << "Rooster" << endl
+	cout << "Beurs" << endl
 		<< "Geschreven door Bart Aaldering (s2969866)," << endl
 		<< "student Informatica (Artificial Intelligence) te Leiden" << endl
 		<< "en Lex Janssens (s2989344)," << endl
