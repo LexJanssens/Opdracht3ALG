@@ -230,7 +230,7 @@ double Beurs::bepaalMaxBedragBU(vector <vector <pair <bool,int>>> &transacties)
 	return bedrag[tw][0].first;
 } // bepaalMaxBedragBU
 
-//****************************************************************************
+//**************************************************************************** 
 
 // Bepaald recursief/top-down het maximale bedrag in de kas op tijd=t met aandelen=a
 // Deze worden opgeslagen in bedrag[][MaxAs] en gereturned
@@ -273,21 +273,21 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 
 	if (t == tw) {
 		return kas + bepaalWaardeAandelen(t, aandelen)*(1.0-(provisie/100));
-	}
+	} else {
+		for (int i = 0; i < macht(2, n); i++) {
+			nieuweKas = bepaalKas(t, kas, aandelen, i);
 
-	for (int i = 0; i < macht(2, n); i++) { // voor alle mogenlijke aandelen in bezig
-		nieuweKas = bepaalKas(t, kas, aandelen, i); // zorg voor bezit het van aandelen i
+			if (nieuweKas >= 0) { // kas mag niet negatief zijn
+				nieuweKas *= 1+(dagen[t]->rente/100); // krijgen van rente
+				bedrag = bepaalMaxBedragRecNoMemo(t+1, nieuweKas, i);
 
-		if (nieuweKas >= 0) { // kas mag niet negatief zijn
-			nieuweKas *= 1+(dagen[t]->rente/100); // krijgen van rente
-			bedrag = bepaalMaxBedragRecNoMemo(t+1, nieuweKas, i);
-
-			if (bedrag > maxBedrag) {
-				maxBedrag = bedrag;
+				if (bedrag > maxBedrag) {
+					maxBedrag = bedrag;
+				}
 			}
 		}
+		return maxBedrag;
 	}
-	return maxBedrag;
 }  // bepaalMaxBedragRecNoMemo (memo)
 
 //****************************************************************************
