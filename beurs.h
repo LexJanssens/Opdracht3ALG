@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 class Dag
 {
 	public:
@@ -96,8 +95,6 @@ class Beurs
 	void drukAfTransacties(vector <vector <pair <bool,int> > > transacties);
 
 private:
-	// TODO: uw eigen memberfuncties en -variabelen
-
 	int tw,		// tijdstip_wereldreis
 		n;		// het aantal verschillende aandelen
 	double provisie,  // provisie op transacties, in procenten.
