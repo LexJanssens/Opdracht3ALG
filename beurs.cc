@@ -334,7 +334,7 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 		// alle te verkopen aandelen worden afgedrukt en verkocht
 		for (int j = 0; j < grote; j++) {
 			if (!transacties[i][j].first) {
-				aandeel = transacties[i][j].second
+				aandeel = transacties[i][j].second;
 				cout << aandeel << ", ";
 				kas += dagen[i]->koersen[aandeel]*(1-(provisie/100));
 			} 
@@ -344,7 +344,7 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 		// alle te kopen aandelen worden afgedrukt en gekocht
 		for (int j = 0; j < grote; j++) {
 			if (transacties[i][j].first) {
-				aandeel = transacties[i][j].second
+				aandeel = transacties[i][j].second;
 				cout << aandeel << ", ";
 				kas -= dagen[i]->koersen[aandeel]*(1+(provisie/100));
 			} 
@@ -354,6 +354,6 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 			kas *= 1+(dagen[i]->rente/100);
 		}
 	}
-	cout << endl << endl << "MaxBedrag = " << kas << endl;
+	cout << endl << endl << "MaxBedrag (volgens transacties) = " << kas << endl;
 }  // drukAfTransacties
 
