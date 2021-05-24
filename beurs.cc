@@ -322,6 +322,7 @@ double Beurs::bepaalMaxBedragRec(bool memo)
 void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 {
 	int grote;
+	int aandeel;
 	double kas = b0;
 
 	for (int i = 0; i <= tw; i++) {
@@ -333,8 +334,9 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 		// alle te verkopen aandelen worden afgedrukt en verkocht
 		for (int j = 0; j < grote; j++) {
 			if (!transacties[i][j].first) {
-				cout << transacties[i][j].second << ", ";
-				kas += dagen[i]->koersen[transacties[i][j].second]*(1-(provisie/100));
+				aandeel = transacties[i][j].second
+				cout << aandeel << ", ";
+				kas += dagen[i]->koersen[aandeel]*(1-(provisie/100));
 			} 
 		}
 
@@ -342,8 +344,9 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 		// alle te kopen aandelen worden afgedrukt en gekocht
 		for (int j = 0; j < grote; j++) {
 			if (transacties[i][j].first) {
-				cout << transacties[i][j].second << ", ";
-				kas -= dagen[i]->koersen[transacties[i][j].second]*(1+(provisie/100));
+				aandeel = transacties[i][j].second
+				cout << aandeel << ", ";
+				kas -= dagen[i]->koersen[aandeel]*(1+(provisie/100));
 			} 
 		}
 		// rente word berekent
