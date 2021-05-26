@@ -1,4 +1,16 @@
 // Implementatie van klasse Beurs
+// beurs.cc
+// Geschreven door : Bart Aaldering (s2969866) en Lex Janssens (s2989344)
+// Compiler: GNU GCC Compiler
+// Beschrijving:
+/*
+	Hier staan de functies die dynamisch het maximale bedrag uitrekenen,
+	rechtstreeks recursief het maximale bedrag uitrekent, en enkele
+	hulpfuncties zoals het omzetten van binaire naar decimaal en vise versa
+	en het bepalen van de maximale waarde van aandelen. Ook staan hier de
+	afdruk en inleesfuncties geschreven.
+
+*/
 
 #include <iostream>
 #include <fstream>
@@ -30,8 +42,8 @@ bool Beurs::leesIn(const char* invoernaam)
 	}
 	invoerNaam = invoernaam; // sla de invoernaam op
 
-	invoer >> tw;
-	invoer >> n;
+	invoer >> tw;	//dagen
+	invoer >> n;	//beursen
 
 	// checkt of tw en n binnen de grenzen ligen
 	if (!(1 <= tw && tw <= MaxTw && 1 <= n && n <= MaxN)) {
@@ -42,7 +54,7 @@ bool Beurs::leesIn(const char* invoernaam)
 	invoer.get();
 	invoer >> provisie;
 	invoer.get();
-	invoer >> b0;
+	invoer >> b0; //startbedrag
 
 	// leest de koersen in
 	for(int i = 0; i < tw+1; i++) {
@@ -85,14 +97,14 @@ void Beurs::drukAfInvoer()
 		}
 	}
 	cout << "--- " << invoerNaam << " ---" << endl;
-
+	//NOTE: laatste dag heeft geen rente
 } // drukAfInvoer
 
 //****************************************************************************
 
 // Zet een binaire string om naar een decimaal getal en returned dit getal
 int Beurs::binToDec(string bin) {
-	int s = 0;
+	int s = 0; //decimale getal van binaire string
 	int l = bin.size(); // lengte van de bitstring
 	for (int i = 0; i < l; i++) {
 		if (bin[i] == '1') {
@@ -106,7 +118,7 @@ int Beurs::binToDec(string bin) {
 
 // Zet een decimaal getal om naar een binaire string en returned deze string
 string Beurs::decToBin(int dec) {
-	string s;
+	string s; //binaire string van decimale getal
 	for (int i = n; i >= 0; i--) {
 		if (dec-macht(2,i) >= 0) {
 			dec -= macht(2,i);
@@ -140,7 +152,7 @@ double Beurs::bepaalWaardeAandelen(int t, int aandelen)
 // bepaald de nieuwe kas door de juiste aandelen te kopen en te verkopen
 double Beurs::bepaalKas(int t, double kas, int vorigeAandelen, int aandelen)
 {
-	string bin = decToBin(vorigeAandelen); 
+	string bin = decToBin(vorigeAandelen);
 	string binNieuw = decToBin(aandelen);
 
 	for (int i = 0; i < n; i++) { // voor ieder aandeel
@@ -189,12 +201,12 @@ vector <pair <bool,int>> Beurs::bepaalTransactie(int vorigeAandelen, int aandele
 // het maximale bedrag te komen.
 double Beurs::bepaalMaxBedragBU(vector <vector <pair <bool,int>>> &transacties)
 {
-	int prevAandeel;
-	int maxAandeel = macht(2,n);
+	int prevAandeel;					//vorige aandeel
+	int maxAandeel = macht(2,n);	//combinaties aan aandelen
 	double kas;
 	double maxKas = -1;
-	
-	// een 2d array met pairs waarvan de eerste de maximale kas is en de tweede 
+
+	// een 2d array met pairs waarvan de eerste de maximale kas is en de tweede
 	// de transacties die nodig zijn om tot dit maximale bedrag te komen.
 	pair <double, vector <vector <pair <bool,int>>>> bedrag[tw+1][maxAandeel];
 
@@ -230,7 +242,7 @@ double Beurs::bepaalMaxBedragBU(vector <vector <pair <bool,int>>> &transacties)
 	return bedrag[tw][0].first;
 } // bepaalMaxBedragBU
 
-//**************************************************************************** 
+//****************************************************************************
 
 // Bepaald recursief/top-down het maximale bedrag in de kas op tijd=t met aandelen=a
 // Deze worden opgeslagen in bedrag[][MaxAs] en gereturned
@@ -264,7 +276,7 @@ double Beurs::bepaalMaxBedragRecMemo(int t, int a, double bedrag[][MaxAs])
 //****************************************************************************
 
 // Recursieve aanroep die het maximale bedrag in de kas op tw returned
-// beginnend op tijd=t met kas=kas en aandelen=aandelen 
+// beginnend op tijd=t met kas=kas en aandelen=aandelen
 // Er worden geen deelresultaten opgeslagen
 double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 {
@@ -292,13 +304,12 @@ double Beurs::bepaalMaxBedragRecNoMemo(int t, double kas, int aandelen)
 
 //****************************************************************************
 
-// Bepaal recursief het maximale bedrag dat de belegger aan het eind van dag tw 
-// in kas kan hebben (op dat moment heeft hij geen aandelen meer). Als parameter 
-// memo = true worden berekende deelresultaten opgeslagen in tabel bedrag en 
+// Bepaal recursief het maximale bedrag dat de belegger aan het eind van dag tw
+// in kas kan hebben (op dat moment heeft hij geen aandelen meer). Als parameter
+// memo = true worden berekende deelresultaten opgeslagen in tabel bedrag en
 // hergebruikt. Als memo = false, worden deelresultaten steeds opnieuw berekend.
 double Beurs::bepaalMaxBedragRec(bool memo)
 {
-
 	if (memo) {
 		double bedrag[tw+1][MaxAs];
 
@@ -310,14 +321,14 @@ double Beurs::bepaalMaxBedragRec(bool memo)
 		}
 		return bepaalMaxBedragRecMemo(tw, 0, bedrag);
 	} else {
-		return bepaalMaxBedragRecNoMemo(0, 20, 0);
+		return bepaalMaxBedragRecNoMemo(0, b0, 0);
 	}
 }  // bepaalMaxBedragRec (memo)
 
 //****************************************************************************
 
 // De transacties die nodig zijn om tot het max bedrag te komen worden afgedrukt.
-// Berekend ook, uitgaande van startbedrag b0, het resulterende eindbedrag, 
+// Berekend ook, uitgaande van startbedrag b0, het resulterende eindbedrag,
 // en drukt dat af op het scherm.
 void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 {
@@ -337,7 +348,7 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 				aandeel = transacties[i][j].second;
 				cout << aandeel << ", ";
 				kas += dagen[i]->koersen[aandeel]*(1-(provisie/100));
-			} 
+			}
 		}
 
 		cout << endl << "    Koop aandelen: ";
@@ -347,7 +358,7 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 				aandeel = transacties[i][j].second;
 				cout << aandeel << ", ";
 				kas -= dagen[i]->koersen[aandeel]*(1+(provisie/100));
-			} 
+			}
 		}
 		// rente word berekent
 		if (i != tw) { // als niet de laastse dag
@@ -356,4 +367,3 @@ void Beurs::drukAfTransacties(vector <vector <pair <bool,int>>> transacties)
 	}
 	cout << endl << endl << "MaxBedrag (volgens transacties) = " << kas << endl;
 }  // drukAfTransacties
-
