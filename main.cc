@@ -1,26 +1,29 @@
 // Hoofdprogramma voor oplossing voor derde programmeeropdracht Algoritmiek,
 // voorjaar 2021: Beurs
-//
-// Bij deze opdracht gaat het erom om bij gegeven beurskoersen van
-// een aantal aandelen en gegeven rentepercentages te berekenen
-// wanneer je het best welke aandelen had kunnen kopen of verkopen
-// om een zo hoog mogelijk eindbedrag te krijgen. Beperkingen zijn
-// * dat je nooit een negatief bedrag in kas mag hebben,
-// * en dat je op elk moment van elk bedrijf hoogstens 1 aandeel wilt
-//   hebben; dit betekent dat je je aandelenbezit op elk moment kunt
-//   coderen in een bitstring.
-//
-// Dit programma biedt de gebruiker een menustructuur om
-// * een instantie van Beurs in te lezen, en daarvoor op drie verschillende
-//   manieren een optimale oplossing te bepalen: het maximale bedrag dat
-//   de belegger aan het eind in kas kan hebben. De drie manieren zijn:
-//   - bottom-up dynamisch programmeren
-//   - top-down dynamisch programmeren
-//   - rechtstreeks recursief
-//   Bij bottom-up dynamisch programmeren worden ook de voor het maximale
-//   bedrag benodigde transacties bepaald.
-//
-// Naam Bart Aaldering s2969866, Lex Jansens s2989344
+// standaard.h
+// Geschreven door : Bart Aaldering (s2969866) en Lex Janssens (s2989344)
+// Compiler: GNU GCC Compiler
+// Beschrijving:
+/*
+	Bij deze opdracht gaat het erom om bij gegeven beurskoersen van
+	een aantal aandelen en gegeven rentepercentages te berekenen
+	wanneer je het best welke aandelen had kunnen kopen of verkopen
+	om een zo hoog mogelijk eindbedrag te krijgen. Beperkingen zijn
+	* dat je nooit een negatief bedrag in kas mag hebben,
+	* en dat je op elk moment van elk bedrijf hoogstens 1 aandeel wilt
+	hebben; dit betekent dat je je aandelenbezit op elk moment kunt
+	coderen in een bitstring.
+
+	Dit programma biedt de gebruiker een menustructuur om
+	* een instantie van Beurs in te lezen, en daarvoor op drie verschillende
+	manieren een optimale oplossing te bepalen: het maximale bedrag dat
+	de belegger aan het eind in kas kan hebben. De drie manieren zijn:
+	- bottom-up dynamisch programmeren
+	- top-down dynamisch programmeren
+	- rechtstreeks recursief
+	Bij bottom-up dynamisch programmeren worden ook de voor het maximale
+	bedrag benodigde transacties bepaald.
+*/
 
 #include <iostream>
 #include <ctime>  // voor clock() en clock_t
