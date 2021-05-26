@@ -1,4 +1,12 @@
 // Defintie van standaard functies.
+// standaard.h
+// Geschreven door : Bart Aaldering (s2969866) en Lex Janssens (s2989344)
+// Compiler: GNU GCC Compiler
+// Beschrijving:
+/*
+	Hier staan de definities van de hulpfuncties die we gebruiken
+	in ons programma.
+*/
 
 #ifndef StandaardHVar  // om te voorkomen dat dit .h bestand meerdere keren
 #define StandaardHVar  // wordt ge-include 
@@ -30,4 +38,3 @@ void schrijfDouble (double getal, int precisie, bool metEndln);
 int macht(int grondtal, int exponent);
 
 #endif
-
