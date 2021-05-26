@@ -1,5 +1,16 @@
 // Definitie van klasse Beurs
-
+// beurs.h
+// Geschreven door : Bart Aaldering (s2969866) en Lex Janssens (s2989344)
+// Compiler: GNU GCC Compiler
+// Beschrijving:
+/*
+	Hier worden functies gebruikt in beurs.cc gedefinieerd.
+	Dit houdt in, de functies voor het dynamisch programmeren,
+	rechtstreeks recursieve functie, converteren van
+	binaire naar decimaal en vise versa, afdrukfuncties,
+	en enkele variabelen.
+	
+*/
 #ifndef BeursHVar  // voorkom dat dit bestand meerdere keren
 #define BeursHVar  // ge-include wordt
 
